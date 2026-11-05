@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VPD math &amp; load 데이터 관리 — 양식 · 프로젝트 · 팀별 입력 · 취합 · 배포</title>
+<meta name="description" content="검증용 math & load 데이터 양식을 올리면 기종 프로젝트마다 팀별 입력 항목을 만들고, 입력 현황을 보며, 팀별 입력 파일을 나눠 주고 되돌려 받아 병합합니다. 파일은 브라우저 안에서만 처리합니다.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://build-2611-06.jobability.co.kr/">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="생성형 AI 업무자동화 전문가과정 · 2차수">
+<meta property="og:url" content="https://build-2611-06.jobability.co.kr/">
+<meta property="og:title" content="VPD math &amp; load 데이터 관리 — 생성형 AI 업무자동화 전문가과정 2차수">
+<meta property="og:description" content="양식을 올리면 기종 프로젝트마다 팀별 입력 항목을 만들고, 현황을 보며, 팀별 파일을 나눠 주고 되돌려 받아 병합합니다.">
+<meta property="og:image" content="https://build-2611-06.jobability.co.kr/og-index.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<nav class="topnav" aria-label="주요 메뉴">
+  <div class="topnav-inner">
+    <a class="topnav-brand" href="index.html">VPD math &amp; load 데이터 관리 <small>build-2611-06 · 기획 이정우</small></a>
+    <ul class="topnav-links">
+      <li><a href="index.html" class="active" aria-current="page">데이터 관리</a></li>
+      <li><a href="progress.html">진행 현황(v1.0)</a></li>
+      <li><a href="guide.html">사용법</a></li>
+      <li><a href="plan.html">기획서</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">생성형 AI 업무자동화 전문가과정 · 2차수 · 프로젝트 06 · v2.0</div>
+  <h1>VPD math &amp; load 데이터 관리</h1>
+  <p>검증 진행에 쓰는 <b>math &amp; load 데이터</b> 가운데 여러 팀이 함께 쓰는 값을 한 곳에서 관리합니다.
+     양식 엑셀을 올리면 기종 프로젝트마다 <b>팀별 입력 항목</b>이 만들어지고, 누가 무엇을 아직 안 넣었는지 보이며,
+     팀별 입력 파일을 나눠 주고 <b>되돌려 받아 병합</b>합니다. 자동 계산 칸은 양식의 수식을 그대로 따릅니다. 파일은 브라우저 안에서만 처리합니다.</p>
+</div></header>
+
+<main><div class="wrap">
+
+<section id="s-template" class="card">
+  <h2 style="margin-top:0">1. 양식을 올리세요</h2>
+  <p class="sub">math &amp; load 데이터 양식 엑셀(프로젝트 생성 · Excalc2D · 필요 데이터 · 실린더 · NVH · Mass 시트)을 올립니다. 시트마다 <code>구분 · 팀 · 파트 · 담당자 · DATA · 단위</code> 머리글과 값 칸을 찾아 항목으로 만듭니다. 양식은 이 브라우저에만 남습니다.</p>
+  <label class="drop" id="t-drop">
+    <input type="file" id="t-file" accept=".xlsx,.xlsm,.xls">
+    <b>양식 엑셀을 끌어다 놓거나 눌러서 고르세요</b>
+    <span>파일은 서버로 올라가지 않습니다 · 브라우저 안에서만 읽습니다</span>
+  </label>
+  <div class="btnrow">
+    <button class="btn" id="btn-t-sample" type="button">예제 양식 넣기(가상)</button>
+    <button class="btn primary" id="btn-p-sample" type="button">예제 프로젝트로 해보기</button>
+  </div>
+  <div id="t-msg"></div>
+  <div id="t-summary"></div>
+</section>
+
+<section id="s-project" class="card">
+  <h2 style="margin-top:0">2. 프로젝트</h2>
+  <div id="p-list"></div>
+  <div id="p-form" hidden>
+    <h3 class="tb-h">새 프로젝트 만들기</h3>
+    <div class="fgrid">
+      <label>기종 타입<input type="text" id="p-type"></label>
+      <label>Grade(톤수)<input type="text" id="p-grade"></label>
+      <label>기종명 <small>필수</small><input type="text" id="p-name"></label>
+      <label>기종코드 <small>필수</small><input type="text" id="p-code"></label>
+    </div>
+    <details class="box"><summary>담당자 입력(팀 / 파트)</summary><div class="fgrid" id="p-owners"></div></details>
+    <div class="btnrow"><button class="btn primary" id="btn-p-create" type="button">프로젝트 만들기</button></div>
+  </div>
+  <div id="p-msg"></div>
+</section>
+
+<section id="s-input" class="card" hidden>
+  <h2 style="margin-top:0">3. 입력 — <span id="cur-title"></span></h2>
+  <div class="ctrl">
+    <label>작업자 이름 <input type="text" id="f-by" placeholder="값을 넣는 사람"></label>
+    <label>시트 <select id="f-sheet"></select></label>
+    <label>팀 <select id="f-team"></select></label>
+    <label>파트 <select id="f-part"></select></label>
+    <label>상태 <select id="f-status"></select></label>
+    <label>찾기 <input type="text" id="f-q" placeholder="DATA 이름"></label>
+    <span class="sub" id="items-count"></span>
+  </div>
+  <div id="i-msg"></div>
+  <div id="items"></div>
+  <p class="sub" style="margin-top:8px">값을 넣고 칸을 벗어나면 바로 저장됩니다. 자동 계산 칸은 양식의 수식대로 채워지며, 참조하는 값이 비어 있으면 「참조 값 대기」로 둡니다.</p>
+</section>
+
+<section id="s-status" class="card" hidden>
+  <h2 style="margin-top:0">4. 입력 현황</h2>
+  <div class="ctrl"><label>묶는 기준 <select id="st-by"><option value="team">팀</option><option value="sheet">시트</option><option value="part">파트</option><option value="owner">담당자</option></select></label></div>
+  <div id="st-table"></div>
+  <h3 class="tb-h">미입력 목록(팀별 독촉용)</h3>
+  <textarea id="st-missing" rows="8" readonly></textarea>
+  <div class="btnrow"><button class="btn" id="btn-missing-copy" type="button">미입력 목록 복사</button><button class="btn green" id="btn-confirm" type="button">최종 확정</button></div>
+  <div id="st-msg"></div>
+  <h3 class="tb-h">변경 이력</h3>
+  <div id="hist"></div>
+</section>
+
+<section id="s-share" class="card" hidden>
+  <h2 style="margin-top:0">5. 배포 · 취합</h2>
+  <p class="sub">팀마다 자기 몫만 든 입력 파일을 내려받아 보내고, 채워 돌아온 파일을 여기에 올려 병합합니다. 같은 칸에 값이 둘 다 있으면 나중에 고친 쪽을 쓰고, 내 값을 지킨 칸은 보고서로 보입니다.</p>
+  <div class="ctrl">
+    <label>팀 <select id="sh-team"></select></label>
+    <button class="btn primary" id="btn-team-xlsx" type="button">팀 입력 파일 내려받기(엑셀)</button>
+    <button class="btn" id="btn-team-json" type="button">JSON 으로</button>
+  </div>
+  <div class="ctrl">
+    <label class="btn">되돌려 받은 파일 병합(엑셀 · JSON)<input type="file" id="sh-file" accept=".xlsx,.xls,.json" style="display:none"></label>
+    <button class="btn green" id="btn-all-xlsx" type="button">취합본 엑셀(양식 모양 + 현황 + 이력)</button>
+  </div>
+  <div class="ctrl">
+    <button class="btn" id="btn-backup" type="button">프로젝트 전체 백업(JSON)</button>
+    <label class="btn">백업 불러오기<input type="file" id="bk-file" accept=".json" style="display:none"></label>
+  </div>
+  <div id="sh-msg"></div>
+</section>
+
+<section class="card">
+  <h2 style="margin-top:0">이번 판에서 하지 않는 것</h2>
+  <ul class="ul">
+    <li><b>서버 DB</b> — 데이터는 이 브라우저와 내려받은 파일에만 있습니다. 여러 사람이 동시에 고치는 공용 DB 는 사내 서버가 할 일이며, 이 도구는 그 전 단계(양식 → 항목 → 팀별 배포 → 병합)를 맡습니다.</li>
+    <li><b>양식 수정</b> — 항목을 더하거나 빼는 것은 양식 엑셀에서 하고 다시 올립니다(기존 프로젝트는 그대로, 새 프로젝트부터 적용).</li>
+    <li><b>복잡한 수식</b> — 사칙연산 · 셀 참조 · IF 만 따라갑니다. 그 밖의 수식은 「수식 미지원」으로 표시하고 직접 넣습니다.</li>
+    <li>단위 환산 · 값의 공학적 타당성 검사 — 숫자인지만 봅니다.</li>
+  </ul>
+</section>
+
+</div></main>
+
+<footer><div class="wrap">
+  생성형 AI 업무자동화 전문가과정 2차수 · 프로젝트 06 · 기획 이정우 ·
+  예제 양식과 예제 프로젝트는 가상이며 실제 사내 데이터가 아닙니다.
+</div></footer>
+
+<script src="lib/xlsx.full.min.js"></script>
+<script src="js/vpdm.js"></script>
+<script src="js/app2.js"></script>
+</body>
+</html>

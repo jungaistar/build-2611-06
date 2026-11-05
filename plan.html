@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기획서 — VPD math &amp; load 데이터 관리</title>
+<meta name="robots" content="index,follow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<style>
+.plan-figs figure{margin:0 0 22px;} .plan-figs img{width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:#fff;}
+.plan-figs figcaption{font-size:13px;color:var(--sub);text-align:center;margin-top:6px;}
+.plan td{white-space:normal;} .plan td .btn{min-height:36px;white-space:nowrap;}
+h3{font-size:15px;margin:16px 0 6px;} main ul{margin:0 0 10px 20px;}
+</style>
+</head>
+<body>
+<nav class="topnav" aria-label="주요 메뉴">
+  <div class="topnav-inner">
+    <a class="topnav-brand" href="index.html">VPD math &amp; load 데이터 관리 <small>build-2611-06 · 기획 이정우</small></a>
+    <ul class="topnav-links">
+      <li><a href="index.html">도구</a></li>
+      <li><a href="guide.html">사용법</a></li>
+      <li><a href="plan.html" class="active" aria-current="page">기획서</a></li>
+    </ul>
+  </div>
+</nav>
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">생성형 AI 업무자동화 전문가과정 · 2차수 · 프로젝트 06 · 기획서 v2.0</div>
+  <h1>VPD math &amp; load 데이터 관리 기획서</h1>
+  <p>검증 진행에 쓰는 math &amp; load 데이터 가운데 여러 팀이 함께 쓰는 값을 한 곳에서 관리하는 도구입니다. 기획자가 보낸 양식 엑셀을 올리면 기종 프로젝트마다 팀별 입력 항목이 만들어지고, 누가 무엇을 아직 안 넣었는지 보이며, 팀별 입력 파일을 나눠 주고 되돌려 받아 병합합니다. 자동 계산 칸은 양식의 수식을 그대로 따릅니다. v1.0 의 검증항목 진행 현황 도구는 「진행 현황」 메뉴에 그대로 둡니다.</p>
+</div></header>
+<main><div class="wrap">
+<div class="card">
+  <h2 style="margin-top:0">기획서 내려받기</h2>
+  <p class="sub">파이프라인 · 아키텍처 · 와이어프레임 · 개발일지가 들어간 워드 문서입니다. 버전마다 따로 남깁니다.</p>
+  <div class="tablewrap plan"><table><thead><tr><th>버전</th><th>날짜</th><th>바뀐 점</th><th>파일</th></tr></thead><tbody><tr><td><b>v1.0</b></td><td>2026-11-02</td><td>첫 판 — 판정 7종·기종/담당자 현황·EIM 요약·담당자별 요청 메일 초안·산출물 미등록·엑셀 내보내기 / 기획서 워드 판·파이프라인·아키텍처·와이어프레임 추가</td><td><a class="btn primary" href="docs/기획서/build-2611-06_이정우_VPD운영업무보조_기획서_v1.0.docx" download>워드 내려받기</a></td></tr><tr><td><b>v2.0</b></td><td>2026-11-04</td><td>기획자 요청(2026-11-03 패들릿 「Vpd math load 데이터 관리툴」)으로 주제 교체 — math &amp; load 데이터 관리(양식 → 프로젝트 → 팀별 입력 · 현황 · 배포 · 병합 · 취합본) / 엔진 js/vpdm.js(새) · 화면 index.html · js/app2.js(새) · v1.0 도구는 progress.html 로 이동(그대로) / 테스트 판정 71→142 · 화면 23→50</td><td><a class="btn primary" href="docs/기획서/build-2611-06_이정우_VPDmath&amp;load데이터관리_기획서_v2.0.docx" download>워드 내려받기</a></td></tr></tbody></table></div>
+</div>
+<div class="card plan">
+  <h2 style="margin-top:0">요구사항과 구현</h2>
+  <div class="tablewrap"><table><thead><tr><th>기획서 요구</th><th>구현</th></tr></thead><tbody><tr><td>(v2.0) 공통 math &amp; load 데이터를 DB 처럼 관리</td><td>양식 → 프로젝트 → 항목(시트·표·값 칸·팀/파트·담당·단위·비고·수식) 구조, 브라우저 저장 + JSON 백업. 서버 DB 는 다음 단계(§4)</td></tr><tr><td>(v2.0) 양식 엑셀(프로젝트 생성 · Excalc2D · 필요 데이터 · 실린더 · NVH · Mass · 추가 데이터 · Back up)</td><td>parseTemplate — 머리글 역할(구분·팀·파트·담당자·DATA·단위·비고·필수)로 표를 찾고 나머지 머리글을 값 칸으로. 위 줄의 「VPM입력/담당자 입력」은 입력 주체. 한 시트 여러 표 · 참고 사항 · 「추가/삭제」 끝 · 값 칸 없는 참고 표</td></tr><tr><td>(v2.0) 프로젝트 생성(기종 타입 · 톤수 · 기종명 · 기종코드 · 생성일 · 최종확정일) · 담당자 입력(팀/파트)</td><td>createProject — 필수 칸 · 같은 코드 거름 · 팀/파트 담당자 자동 배정 · confirm 으로 최종확정일</td></tr><tr><td>(v2.0) 자동 계산(NVH 수식)</td><td>evalFormula — 사칙연산 · 같은 시트 셀 참조 · IF 문자 비교. 참조 값이 비면 「참조 값 대기」, 모르는 함수는 「수식 미지원」</td></tr><tr><td>(v2.0) 취합</td><td>진행률(팀·시트·파트·담당자별 완료·일부·미입력·자동), 미입력 목록 글, 변경 이력, 취합본 엑셀(양식 모양 + 현황 + 이력)</td></tr><tr><td>(v2.0) 배포</td><td>팀별 입력 파일(엑셀·JSON, 항목ID 열) → 되돌려 받아 병합: 빈 칸은 채움 · 같은 값 넘김 · 둘 다 있으면 수정시각이 늦은 쪽(시각 없으면 내 값) · 보고서</td></tr><tr><td>(v1.0) 검증항목 진행 현황 · EIM 요약 · 요청 메일 초안</td><td>progress.html 로 옮겨 그대로 유지</td></tr></tbody></table></div>
+</div>
+<div class="card plan-figs"><h2 style="margin-top:0">그림으로 보기</h2><figure><img src="docs/img/pipeline.png" alt="처리 흐름(파이프라인)" loading="lazy"><figcaption>처리 흐름(파이프라인)</figcaption></figure><figure><img src="docs/img/architecture.png" alt="구성(아키텍처)" loading="lazy"><figcaption>구성(아키텍처)</figcaption></figure><figure><img src="docs/img/wireframe-1.png" alt="와이어프레임 — 데이터 관리 화면(v2.0)" loading="lazy"><figcaption>와이어프레임 — 데이터 관리 화면(v2.0)</figcaption></figure><figure><img src="docs/img/wireframe-2.png" alt="와이어프레임 — 현황 · 배포(v2.0)" loading="lazy"><figcaption>와이어프레임 — 현황 · 배포(v2.0)</figcaption></figure><figure><img src="docs/img/screen.png" alt="실제 화면(예제 데이터)" loading="lazy"><figcaption>실제 화면(예제 데이터)</figcaption></figure></div>
+<div class="card"><h2 style="margin-top:0">개발일지</h2><h3>2026-11-04 · v2.0 math &amp; load 데이터 관리</h3><ul><li>추가 요청 원문(패들릿 게시물 4129581689, 2026-11-03 밤): 「프로젝트를 해당 건에 한정하여 변경하고자 합니다. 검증진행을 위한 math &amp;load 데이터 중 여러 팀에서 공통으로 사용하는 데이터들이 있는데 해당 데이터들을 db관리하고 취합 및 배포할수있는 보조 툴 개발하고싶습니다. 참고 테이터들에 대해서는 엑셀파일로 첨부합니다.」 + 첨부 양식(프로젝트 생성 · Excalc2D · Input_필요 데이터 · Input_실린더 정보 · Input(NVH) · Mass · Mass(추가 데이터) · Mass(Back up)) — 값은 비어 있고 담당자는 홍길동 자리표시, 저장소에 넣지 않음</li><li>엔진 vpdm.js — 양식 읽기(머리글 역할 · 값 칸 · 수식 · 입력 주체 · 여러 표 · 참고 사항), 프로젝트 · 값 · 자동 계산(evalFormula) · 현황 · 미입력 글 · 팀 배포 · 병합 · 취합본 · 예제(가상)</li><li>화면 index.html · app2.js — 양식 · 프로젝트 · 입력 · 현황 · 배포. v1.0 은 progress.html 로.</li><li>판정 테스트 142 · 화면 테스트 50 통과</li></ul><h3>2026-11-02 · 첫 판</h3><ul><li>패들릿 build02 이정우 「VPD 운영 업무 보조 에이전시」를 작업 지시서(CLAUDE.md)로 옮기고 구현</li><li>판정 엔진 vpd.js — 정리·검증, 판정 7종과 근거, 집계, EIM 요약, 대상 추출 5종, 메일 치환, mailto</li><li>화면 — 현황·필터·EIM 복사·템플릿 편집·초안 카드·선택 AI·엑셀 6시트</li><li>판정 테스트 71 · 화면 테스트 22 통과</li></ul></div>
+</div></main>
+<footer><div class="wrap">생성형 AI 업무자동화 전문가과정 · 2차수 · 프로젝트 06 · 기획 이정우 · <a href="https://build-2611-00.jobability.co.kr/">2차수 프로젝트 총괄</a></div></footer>
+</body>
+</html>

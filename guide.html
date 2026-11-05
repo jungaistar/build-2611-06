@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사용법 — VPD math &amp; load 데이터 관리</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<nav class="topnav" aria-label="주요 메뉴">
+  <div class="topnav-inner">
+    <a class="topnav-brand" href="index.html">VPD math &amp; load 데이터 관리 <small>build-2611-06 · 기획 이정우</small></a>
+    <ul class="topnav-links">
+      <li><a href="index.html">데이터 관리</a></li>
+      <li><a href="progress.html">진행 현황(v1.0)</a></li>
+      <li><a href="guide.html" class="active" aria-current="page">사용법</a></li>
+      <li><a href="plan.html">기획서</a></li>
+    </ul>
+  </div>
+</nav>
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">사용법 · v2.0</div>
+  <h1>양식 한 장이 프로젝트의 입력 항목이 되고, 팀별 파일로 나뉘었다가 한 곳으로 돌아옵니다</h1>
+  <p>처리는 전부 이 브라우저 안에서 끝나고 파일은 어디로도 올라가지 않습니다. 양식과 프로젝트는 이 브라우저에만 남으니 백업 JSON 을 가끔 내려받아 두세요.</p>
+</div></header>
+<main><div class="wrap">
+<div class="card">
+  <h2 style="margin-top:0">1. 양식 올리기</h2>
+  <p>math &amp; load 데이터 양식 엑셀을 그대로 올립니다. 시트마다 <b>구분 · 팀 · 파트 · 담당자 · DATA(또는 필요 Data · Part) · 단위</b> 머리글 줄을 찾고, 머리글에 있지만 이 역할이 아닌 칸(입력 · 값 · Tube ID · Mass · X · Y · Z · Bucket 등)을 <b>값 칸</b>으로 봅니다.
+  머리글 바로 위 줄의 「VPM입력」「담당자 입력」은 그 칸을 누가 채우는지로 읽습니다. 한 시트에 표가 둘(Mass 의 Main Frame · Support)이면 둘 다 읽고, 표 위 「참고 사항」 줄은 표 메모로 붙입니다.</p>
+  <ul style="margin-left:20px">
+    <li>「프로젝트 생성」 시트 — 기종 타입 · Grade(톤수) · 기종명 · 기종코드 칸과 「담당자 입력」 아래 팀/파트 표를 읽어 새 프로젝트 양식으로 씁니다. <code>#</code> 로 시작하는 글은 안내(힌트)입니다.</li>
+    <li>셀에 적힌 수식(<code>=I4/60*I6/2</code>)은 <b>자동 계산 칸</b>이 됩니다. 사칙연산 · 같은 시트 셀 참조 · <code>IF(a="D",1,0.9)</code> 까지 따라가고, 그 밖은 「수식 미지원」으로 표시합니다.</li>
+    <li>값 칸이 없는 표(Mass(Back up) 처럼 설명만 있는 표)는 참고 표로 두고 입력 항목에 넣지 않습니다. 「추가/삭제」 줄에서 표가 끝납니다.</li>
+    <li>양식에 미리 적힌 예시 값(6.5, 홍길동)은 값이 아니라 입력 칸의 안내 글로만 씁니다.</li>
+  </ul>
+  <p class="sub">항목을 더하거나 빼려면 양식 엑셀을 고쳐 다시 올립니다. 이미 만든 프로젝트는 그대로이고 새 프로젝트부터 새 양식을 씁니다.</p>
+</div>
+<div class="card">
+  <h2 style="margin-top:0">2. 프로젝트 만들기</h2>
+  <p>기종 타입 · 톤수 · 기종명 · 기종코드를 적고 팀/파트별 담당자 이름을 넣으면, 양식의 모든 항목이 그 프로젝트의 입력 항목으로 복사되고 담당자가 팀/파트에 맞춰 붙습니다. 기종코드는 프로젝트를 구분하는 열쇠라 같은 코드를 두 번 쓸 수 없습니다.</p>
+</div>
+<div class="card">
+  <h2 style="margin-top:0">3. 입력</h2>
+  <p>먼저 <b>작업자 이름</b>을 적습니다(누가 넣었는지 이력에 남기기 위해서이며, 없으면 저장하지 않습니다). 시트 · 팀 · 파트 · 상태 · DATA 이름으로 걸러 보면서 값을 넣고 칸을 벗어나면 바로 저장됩니다.
+  단위가 있는 칸에 숫자가 아닌 값을 넣으면 저장은 하되 경고합니다. 자동 계산 칸은 직접 넣을 수 없고, 참조하는 값이 비어 있으면 「참조 값 대기」로 둡니다.</p>
+  <p>상태는 세 가지입니다 — <b>미입력</b>(값 칸이 전부 빈칸) · <b>일부</b>(일부만) · <b>입력 완료</b>(전부). 자동 계산 항목은 입력률에 넣지 않습니다.</p>
+</div>
+<div class="card">
+  <h2 style="margin-top:0">4. 입력 현황</h2>
+  <p>팀 · 시트 · 파트 · 담당자별 입력률과 완료 · 일부 · 미입력 수를 봅니다. 「미입력 목록」은 팀마다 묶은 독촉용 글이라 복사해 메신저에 붙이면 됩니다. 「최종 확정」을 누르면 확정일이 기록되고, 그 뒤 바뀌는 값은 이력에 「확정 후 변경」으로 표시됩니다.</p>
+</div>
+<div class="card">
+  <h2 style="margin-top:0">5. 배포 · 취합</h2>
+  <ol style="margin-left:20px">
+    <li><b>팀 입력 파일 내려받기</b> — 고른 팀의 항목만 든 엑셀(또는 JSON)을 만듭니다. 「항목ID」 열은 되돌려 받을 때 짝을 맞추는 열이니 지우면 안 됩니다. 자동 계산 칸은 들어 있지 않습니다.</li>
+    <li><b>되돌려 받은 파일 병합</b> — 채워 돌아온 엑셀 · JSON 을 올립니다. 규칙: 비어 있던 칸은 채운다 · 같은 값은 넘긴다 · 둘 다 값이 있으면 <b>수정시각이 더 늦은 쪽</b>을 쓴다(받은 파일에 시각이 없으면 내 값을 지킨다). 내 값을 지킨 칸은 보고서에 나오니 필요하면 직접 고칩니다. 다른 프로젝트 코드의 파일은 거릅니다.</li>
+    <li><b>취합본 엑셀</b> — 양식과 같은 시트 모양으로 모든 값(자동 계산 포함)과 상태 · 항목ID, 그리고 현황 · 이력 시트를 함께 내보냅니다.</li>
+    <li><b>백업 · 불러오기</b> — 양식과 프로젝트 전체를 JSON 하나로 내려받고, 다른 PC 에서 불러옵니다.</li>
+  </ol>
+</div>
+<div class="card">
+  <h2 style="margin-top:0">6. v1.0 진행 현황 도구</h2>
+  <p>검증항목 관리 엑셀로 지연 · 임박 · 완료를 판정하고 EIM 요약과 요청 메일 초안을 만드는 v1.0 도구는 <a href="progress.html">진행 현황</a> 메뉴에 그대로 있습니다. 판정 규칙(기준일 · 임박 D-7 등)과 사용법은 그 화면의 안내를 따릅니다.</p>
+</div>
+<div class="card">
+  <h2 style="margin-top:0">7. 이번 판에서 하지 않는 것</h2>
+  <ul style="margin-left:20px">
+    <li>서버 DB — 여러 사람이 동시에 고치는 공용 저장소는 사내 서버 몫입니다. 이 도구는 양식 → 항목 → 팀별 배포 → 병합까지를 브라우저와 파일로 합니다.</li>
+    <li>복잡한 수식(SUM · VLOOKUP 등) — 「수식 미지원」으로 표시하고 직접 넣습니다.</li>
+    <li>단위 환산 · 공학적 타당성 검사 — 숫자인지만 봅니다.</li>
+    <li>양식 편집 — 양식은 엑셀에서 고쳐 다시 올립니다.</li>
+  </ul>
+</div>
+</div></main>
+<footer><div class="wrap">생성형 AI 업무자동화 전문가과정 2차수 · 프로젝트 06 · 기획 이정우</div></footer>
+</body>
+</html>
